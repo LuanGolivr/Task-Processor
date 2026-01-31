@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:20
 
 WORKDIR /app
 
@@ -11,4 +11,4 @@ RUN npm run build
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "node dist/src/index.js"]
+CMD ["sh", "-c", "npm run db:deploy && node dist/src/index.js"]

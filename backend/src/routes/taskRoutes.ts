@@ -1,5 +1,5 @@
 import {Router, type Request, type Response} from 'express';
-import TaskController from '../controllers/taskController';
+import TaskController from '../controllers/taskController.js';
 
 class TaskRoutes{
     private router:Router;
@@ -7,22 +7,28 @@ class TaskRoutes{
 
     constructor(){
         this.router = Router();
-        this.setRoutes();
-        this.taskController = new TaskController();
+        const controller = new TaskController();
+        this.taskController = controller;
+        this.setRoutes(this.taskController);
+        
     }
 
-    private setRoutes():void{
+    private setRoutes(controller: TaskController):void{
         this.router.get("/health", (req: Request, res:Response) =>{
             res.status(200).json({status: "OK, server is healthy"});
         });
 
-        this.router.get("/task/:id", this.taskController.getTaskById.bind(this.taskController));
+        this.router.get("/task/:id", controller.getTaskById.bind(controller));
     
-        this.router.get("/tasks", this.taskController.getTasks.bind(this.taskController));
+        this.router.get("/tasks", controller.getTasks.bind(controller));
     
-        this.router.post("/task", this.taskController.createTask.bind(this.taskController));
+        this.router.post("/task", controller.createTask.bind(controller));
+
+        this.router.patch("/task/:id", controller.updateTask.bind(controller));
+
+        this.router.patch("/task/:id/cancel", controller.cancelTask.bind(controller));
     
-        this.router.delete("/task/:id", this.taskController.deleteTask.bind(this.taskController));
+        this.router.delete("/task/:id", controller.deleteTask.bind(controller));
     }
 
     public getRouter():Router{

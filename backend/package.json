@@ -5,7 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npx tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "db:deploy": "npx prisma migrate deploy && npx prisma generate"
   },
   "repository": {
     "type": "git",
@@ -22,12 +24,19 @@
     "@types/express": "^5.0.6",
     "@types/helmet": "^0.0.48",
     "@types/node": "^25.0.10",
+    "@types/pg": "^8.16.0",
+    "prisma": "^7.3.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.3.0",
+    "@prisma/client": "^7.3.0",
     "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "env": "^0.0.2",
     "express": "^5.2.1",
-    "helmet": "^8.1.0"
+    "helmet": "^8.1.0",
+    "pg": "^8.18.0"
   }
 }

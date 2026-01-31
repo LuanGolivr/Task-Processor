@@ -5,19 +5,27 @@ class TaskController{
 
     }
 
-    public getTasks(req:Request, res:Response):void{
+    public getTasks = (req:Request, res:Response):void => {
 
     }
 
-    public getTaskById(req:Request, res:Response):void{
+    public getTaskById = (req:Request, res:Response):void => {
 
     }
 
-    public createTask(req:Request, res:Response):void{
+    public createTask = (req:Request, res:Response):void => {
         
     }
 
-    public deleteTask(req:Request, res:Response):void{
+    public updateTask = (req: Request, res:Response):void => {
+
+    }
+
+    public cancelTask = (req:Request, res:Response):void => {
+
+    }
+
+    public deleteTask = (req:Request, res:Response):void => {
 
     }
 }
