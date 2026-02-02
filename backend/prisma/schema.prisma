@@ -19,6 +19,7 @@ model Task {
   title String
   description String?
   status Status @default(PENDING)
+  priority Int @default(0)
   processing_time DateTime
   started_at DateTime?
   completed_at DateTime?

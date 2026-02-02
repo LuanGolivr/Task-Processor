@@ -1,7 +1,6 @@
 import { PrismaClient, Prisma, type Task } from  '../../prisma/generated/prisma/client.js' //'../../generated/prisma-client';
 import { PrismaPg } from '@prisma/adapter-pg';
 
-
 class DataBaseService {
     private prisma: PrismaClient;
     private adapter: PrismaPg;
@@ -50,14 +49,12 @@ class DataBaseService {
     }
 
     public async createTask(data:any): Promise<Task | null>{
-        let task: Task | null = null;
         try{
-            task = await this.prisma.task.create({ data });
+            return await this.prisma.task.create({ data });
         }catch(error){
             console.error("Error creating task: ", error);
+            return null;
         }
-
-        return task;
     }
 
     public async updateTask(id:string, data:any): Promise<Task | null>{
