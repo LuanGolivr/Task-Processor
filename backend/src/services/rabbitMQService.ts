@@ -29,21 +29,46 @@ export class RabbitMQService {
         }
     }
 
-    public async publishToQueue(queueName: string | null, message:EnqueuedTask): Promise<void>{
-        try{
-            if(this.channel){
-                this.channel.sendToQueue(
-                    queueName? queueName : this.standardQueuename,
-                    Buffer.from(JSON.stringify(message)),
-                    { persistent: true }
-                );
-            }else{
-                throw new Error("Channel is not established");
+    public async publishToQueue(
+        queueName: string | null = null, 
+        message:EnqueuedTask,
+        attempts:number = 3
+    ): Promise<void>{
+        let attempt = 0;
+        while(attempt < attempts){
+            try{
+                if(!this.channel)await this.connect();
+
+                if(this.channel){
+                    const sucess = this.channel.sendToQueue(
+                        queueName? queueName : this.standardQueuename,
+                        Buffer.from(JSON.stringify(message)),
+                        { persistent: true }
+                    );
+
+                    if(sucess){
+                        console.log(`[Sent] Message to queue: ${queueName? queueName : this.standardQueuename}`);
+                        return;
+                    }
+
+                    throw new Error("Channel buffer full");
+                }else{
+                    throw new Error("Channel is not established");
+                }
+            }catch(error){
+                attempt++;
+                const delay = Math.pow(2, attempt) * 1000;
+                console.warn(`[Retry ${attempt}/${attempts}] Failed to publish.Retraying in ${delay}ms....`);
+                
+                if(attempt >= attempts){
+                    console.error("Max retries reached. Message lost.");
+                    throw error;
+                }
+
+                await new Promise((res) => setTimeout(res, delay));
             }
-        }catch(error){
-            console.error("Error publishing to queue: ", error);
-            throw error;
         }
+        
     }
 }
 

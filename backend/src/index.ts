@@ -1,22 +1,28 @@
 import express, { type Application, Router } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import { createServer, Server } from 'http';
 
 import TaskRoutes from './routes/taskRoutes.js';
+import gRPCS from './services/gRPCService.js';
+import socketServer from './services/SocketService.js';
 
 class App{
     private port:number;
     private app:Application;
     private router:TaskRoutes;
+    private httpServer: Server;
 
     constructor(){
         this.app = express();
+        this.httpServer = createServer(this.app);
         this.port = process.env.SERVER_PORT ? parseInt(process.env.SERVER_PORT) : 3000;
         this.router = new TaskRoutes();
 
         this.initMiddlewares();
         this.initRoutes();
         this.initErrorHandling();
+        this.initServices();
     }
 
     private initMiddlewares():void{
@@ -31,6 +37,11 @@ class App{
     }
 
     private initErrorHandling():void{}
+
+    private initServices():void{
+        socketServer.init(this.httpServer);
+        gRPCS.start();
+    }
 
     public listen():void{
         this.app.listen(this.port, () => {
