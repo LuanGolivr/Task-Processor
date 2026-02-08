@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package task;
+
+service TaskService {
+    rpc UpdateTaskStatus (StatusRequest) returns (StatusResponse);
+}
+
+message StatusRequest {
+    string id = 1;
+    string status = 2;
+}
+
+message StatusResponse {
+    bool sucess = 1;
+    string message = 2;
+}
+
